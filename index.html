@@ -1,0 +1,244 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f5f7ff">
+<title>سودوکو فارسی</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#f5f7ff;color:#202943;
+ font-family:Tahoma,Arial,sans-serif;
+}
+.container{max-width:520px;margin:auto;padding:24px 17px}
+header{display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:25px;font-weight:bold;color:#5368e9}
+.profile{background:white;padding:12px;border-radius:15px}
+h1{font-size:27px;margin-top:35px}
+.sub{color:#8992a8;font-size:14px}
+.card{
+ background:white;border-radius:22px;padding:19px;
+ margin-top:17px;box-shadow:0 7px 25px #26365c0b;
+ cursor:pointer;border:1px solid #edf0fa;
+}
+.card h3{margin:0 0 9px}
+.card p{margin:0;color:#8992a8;font-size:13px}
+.icon{font-size:27px;margin-bottom:12px}
+.primary{
+ background:#586ce9;color:white;border:0;border-radius:17px;
+ padding:17px;width:100%;font-size:16px;font-weight:bold;
+ cursor:pointer;margin-top:20px
+}
+#game{display:none}
+.top{display:flex;justify-content:space-between;align-items:center}
+.board{
+ display:grid;grid-template-columns:repeat(9,1fr);
+ gap:0;background:#5268df;border:2px solid #5268df;
+ margin-top:24px;border-radius:9px;overflow:hidden;
+}
+.cell{
+ aspect-ratio:1;background:white;border:1px solid #e4e8f4;
+ display:flex;align-items:center;justify-content:center;
+ font-size:clamp(13px,4vw,20px);cursor:pointer;
+}
+.cell:nth-child(3n){border-left:2px solid #9ba9ed}
+.cell:nth-child(27n),.cell:nth-child(54n){
+ border-bottom:2px solid #9ba9ed
+}
+.cell.selected{background:#dce4ff;color:#405bdc}
+.cell.related{background:#f0f3ff}
+.cell.fixed{font-weight:bold;color:#27334d}
+.cell.wrong{color:#e34e65}
+.numbers{
+ display:grid;grid-template-columns:repeat(9,1fr);
+ gap:5px;margin-top:20px
+}
+.numbers button{
+ border:0;background:#e9edff;color:#5268df;
+ padding:12px 0;border-radius:12px;font-size:18px
+}
+.actions{display:flex;gap:8px;margin-top:14px}
+.actions button{
+ flex:1;padding:13px 5px;border:0;border-radius:12px;
+ background:white;color:#5368e9;font-size:12px
+}
+.back{border:0;background:white;padding:10px 15px;border-radius:12px}
+.info{display:flex;justify-content:space-between;color:#77819b;margin-top:20px}
+</style>
+</head>
+<body>
+<div class="container">
+<section id="home">
+<header>
+<div class="logo">SUDOKU</div>
+<div class="profile">🧩 بازی فکری</div>
+</header>
+<h1>سلام! آماده‌ای؟ 👋</h1>
+<p class="sub">ذهن خودت رو به چالش بکش.</p>
+<div class="card" onclick="startGame('آسان')">
+<div class="icon">🌱</div><h3>سودوکوی آسان</h3>
+<p>شروعی راحت برای گرم کردن ذهن</p>
+</div>
+<div class="card" onclick="startGame('متوسط')">
+<div class="icon">🧠</div><h3>سودوکوی متوسط</h3>
+<p>کمی فکر بیشتر، هیجان بیشتر</p>
+</div>
+<div class="card" onclick="startGame('سخت')">
+<div class="icon">🔥</div><h3>سودوکوی سخت</h3>
+<p>برای ذهن‌های آماده</p>
+</div>
+<div class="card" onclick="startGame('کوچک')">
+<div class="icon">🎯</div><h3>سودوکوی کوچک</h3>
+<p>جدول سریع ۴×۴</p>
+</div>
+<div class="card" onclick="startGame('رنگی')">
+<div class="icon">🎨</div><h3>سودوکوی رنگی</h3>
+<p>یک تجربه متفاوت</p>
+</div>
+<button class="primary" onclick="startGame('متوسط')">شروع بازی جدید ←</button>
+</section>
+
+<section id="game">
+<div class="top">
+<button class="back" onclick="goHome()">← بازگشت</button>
+<strong id="level">متوسط</strong>
+</div>
+<div class="info">
+<span>⏱ <span id="timer">00:00</span></span>
+<span id="mistakes">اشتباهات: ۰</span>
+</div>
+<div class="board" id="board"></div>
+<div class="numbers" id="numbers"></div>
+<div class="actions">
+<button onclick="erase()">پاک کردن</button>
+<button onclick="newGame()">جدول جدید</button>
+<button onclick="hint()">راهنمایی</button>
+</div>
+</section>
+</div>
+
+<script>
+let puzzle=[],solution=[],selected=null,fixed=[],seconds=0;
+let mistakes=0,clock=null,size=9;
+
+const fa=n=>String(n).replace(/\d/g,d=>"۰۱۲۳۴۵۶۷۸۹"[d]);
+
+function shuffle(a){
+ for(let i=a.length-1;i>0;i--){
+ let j=Math.floor(Math.random()*(i+1));
+ [a[i],a[j]]=[a[j],a[i]];
+ }return a;
+}
+
+function makeSolution(){
+ let base=Array.from({length:9},(_,i)=>i);
+ let rows=shuffle([0,1,2]).flatMap(g=>shuffle([0,1,2]).map(x=>g*3+x));
+ let cols=shuffle([0,1,2]).flatMap(g=>shuffle([0,1,2]).map(x=>g*3+x));
+ let nums=shuffle([1,2,3,4,5,6,7,8,9]);
+ return rows.map(r=>cols.map(c=>nums[(r*3+Math.floor(r/3)+c)%9]));
+}
+
+function valid(b,r,c,n){
+ for(let i=0;i<9;i++){
+ if(b[r][i]===n||b[i][c]===n)return false;
+ }
+ let sr=Math.floor(r/3)*3,sc=Math.floor(c/3)*3;
+ for(let i=sr;i<sr+3;i++)for(let j=sc;j<sc+3;j++)
+ if(b[i][j]===n)return false;
+ return true;
+}
+
+function startGame(level){
+ size=level==='کوچک'?4:9;
+ document.getElementById('home').style.display='none';
+ document.getElementById('game').style.display='block';
+ document.getElementById('level').textContent=level;
+ newGame();
+}
+
+function newGame(){
+ if(clock)clearInterval(clock);
+ seconds=0;mistakes=0;selected=null;
+ document.getElementById('timer').textContent='۰۰:۰۰';
+ updateMistakes();
+ if(size===4){
+ solution=[[1,2,3,4],[3,4,1,2],[2,1,4,3],[4,3,2,1]];
+ puzzle=solution.map(r=>r.slice());
+ }else{
+ solution=makeSolution();
+ puzzle=solution.map(r=>r.slice());
+ let level=document.getElementById('level').textContent;
+ let count=level==='آسان'?32:level==='سخت'?52:level==='رنگی'?45:42;
+ let positions=shuffle(Array.from({length:81},(_,i)=>i));
+ positions.slice(0,count).forEach(i=>puzzle[Math.floor(i/9)][i%9]=0);
+ }
+ fixed=puzzle.map(r=>r.map(v=>v!==0));
+ render();
+ clock=setInterval(()=>{
+ seconds++;
+ document.getElementById('timer').textContent=fa(String(Math.floor(seconds/60)).padStart(2,'0'))+':'+fa(String(seconds%60).padStart(2,'0'));
+ },1000);
+}
+
+function render(){
+ const board=document.getElementById('board');
+ board.style.gridTemplateColumns=`repeat(${size},1fr)`;
+ board.innerHTML='';
+ puzzle.forEach((row,r)=>row.forEach((v,c)=>{
+ let cell=document.createElement('div');
+ cell.className='cell'+(fixed[r][c]?' fixed':'');
+ if(selected&&selected[0]===r&&selected[1]===c)cell.classList.add('selected');
+ else if(selected&&(selected[0]===r||selected[1]===c))cell.classList.add('related');
+ cell.textContent=v?fa(v):'';
+ cell.onclick=()=>{selected=[r,c];render()};
+ board.appendChild(cell);
+ }));
+ const nums=document.getElementById('numbers');
+ nums.style.gridTemplateColumns=`repeat(${size},1fr)`;
+ nums.innerHTML='';
+ for(let n=1;n<=size;n++){
+ let b=document.createElement('button');
+ b.textContent=fa(n);
+ b.onclick=()=>putNumber(n);
+ nums.appendChild(b);
+ }
+}
+
+function putNumber(n){
+ if(!selected)return;
+ let [r,c]=selected;
+ if(fixed[r][c])return;
+ if(n!==solution[r][c]){
+ mistakes++;updateMistakes();
+ }else{
+ puzzle[r][c]=n;render();
+ if(puzzle.every((row,r)=>row.every((v,c)=>v===solution[r][c]))){
+ clearInterval(clock);
+ setTimeout(()=>alert('آفرین! جدول را حل کردی 🎉'),100);
+ }
+ }
+}
+
+function updateMistakes(){
+ document.getElementById('mistakes').textContent='اشتباهات: '+fa(mistakes);
+}
+function erase(){
+ if(!selected)return;
+ let [r,c]=selected;
+ if(!fixed[r][c]){puzzle[r][c]=0;render()}
+}
+function hint(){
+ if(!selected)return;
+ let [r,c]=selected;
+ if(!fixed[r][c]){puzzle[r][c]=solution[r][c];render()}
+}
+function goHome(){
+ if(clock)clearInterval(clock);
+ document.getElementById('game').style.display='none';
+ document.getElementById('home').style.display='block';
+}
+</script>
+</body>
+</html>
