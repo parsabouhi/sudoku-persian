@@ -3,41 +3,24 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#f5f7ff">
 <title>سودوکو فارسی</title>
 
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;
- background:#f5f7ff;
- color:#26334d;
+ margin:0;background:#f5f7ff;color:#26334d;
  font-family:Tahoma,Arial,sans-serif;
 }
-.container{
- max-width:480px;
- margin:auto;
- padding:22px 15px;
-}
-header{
- display:flex;
- justify-content:space-between;
- align-items:center;
-}
-.logo{
- font-size:25px;
- font-weight:bold;
- color:#586ce9;
-}
+.container{max-width:480px;margin:auto;padding:22px 15px}
+header{display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:25px;font-weight:bold;color:#586ce9}
 h1{font-size:26px;margin-top:35px}
 .sub{color:#929bad;font-size:14px}
 .card{
- background:white;
- border-radius:20px;
- padding:20px;
- margin-top:14px;
- cursor:pointer;
+ background:white;border-radius:20px;padding:20px;
+ margin-top:14px;cursor:pointer;
  box-shadow:0 5px 20px #26365c0b;
 }
 .card h3{margin:0 0 8px}
@@ -45,33 +28,14 @@ h1{font-size:26px;margin-top:35px}
 .icon{font-size:29px;margin-bottom:10px}
 button{font-family:inherit;cursor:pointer}
 .primary{
- width:100%;
- padding:16px;
- border:0;
- border-radius:15px;
- background:#586ce9;
- color:white;
- font-size:16px;
- margin-top:20px;
+ width:100%;padding:16px;border:0;border-radius:15px;
+ background:#586ce9;color:white;font-size:16px;margin-top:20px;
 }
 #game{display:none}
-.top{
- display:flex;
- justify-content:space-between;
- align-items:center;
-}
-.back{
- border:0;
- background:white;
- padding:12px;
- border-radius:12px;
-}
-.info{
- display:flex;
- justify-content:space-between;
- color:#77819b;
- margin-top:20px;
-}
+.top{display:flex;justify-content:space-between;align-items:center}
+.back{border:0;background:white;padding:12px;border-radius:12px}
+.info{display:flex;justify-content:space-between;color:#77819b;margin-top:20px}
+
 .board{
  display:grid;
  grid-template-columns:repeat(9,1fr);
@@ -95,37 +59,10 @@ button{font-family:inherit;cursor:pointer}
  cursor:pointer;
  user-select:none;
 }
-
-/* خطوط عمودی مربع‌های ۳×۳ */
-.cell:nth-child(9n+3),
-.cell:nth-child(9n+6){
- border-left:3px solid #536ce9;
-}
-
-/* خطوط افقی مربع‌های ۳×۳ */
-.cell:nth-child(n+19):nth-child(-n+27),
-.cell:nth-child(n+46):nth-child(-n+54){
- border-bottom:3px solid #536ce9;
-}
-
-.cell.fixed{
- font-weight:bold;
- color:#26334d;
-}
-.cell.selected{
- background:#b9c9ff!important;
-}
-.cell.related{
- background:#f0f3ff;
-}
-.cell.same{
- background:#dce5ff;
- color:#405bdc;
-}
-.cell.wrong{
- color:#e34e65;
- background:#ffe8eb;
-}
+.cell.fixed{font-weight:bold;color:#26334d}
+.cell.selected{background:#b9c9ff!important}
+.cell.related{background:#f0f3ff}
+.cell.same{background:#dce5ff;color:#405bdc}
 
 /* جدول رنگی */
 .board.colorful .cell:nth-child(9n+1){background:#fff0ed}
@@ -137,40 +74,22 @@ button{font-family:inherit;cursor:pointer}
 .board.colorful .cell:nth-child(9n+7){background:#e5f8f8}
 .board.colorful .cell:nth-child(9n+8){background:#fff0df}
 .board.colorful .cell:nth-child(9n+9){background:#eef0ff}
-.board.colorful .cell.selected{background:#b9c9ff!important}
 
 .numbers{
  display:grid;
  grid-template-columns:repeat(9,1fr);
- gap:6px;
- margin-top:20px;
+ gap:6px;margin-top:20px;
 }
 .numbers button{
- border:1px solid #e2e7f8;
- background:white;
- color:#5268df;
- border-radius:13px;
- min-height:49px;
- font-size:19px;
- font-weight:bold;
+ border:1px solid #e2e7f8;background:white;
+ color:#5268df;border-radius:13px;
+ min-height:49px;font-size:19px;font-weight:bold;
 }
-.numbers button.active{
- background:#586ce9;
- color:white;
-}
-.actions{
- display:flex;
- gap:8px;
- margin-top:15px;
-}
+.numbers button.active{background:#586ce9;color:white}
+.actions{display:flex;gap:8px;margin-top:15px}
 .actions button{
- flex:1;
- border:0;
- background:white;
- color:#5368e9;
- padding:13px 4px;
- border-radius:12px;
- font-size:12px;
+ flex:1;border:0;background:white;color:#5368e9;
+ padding:13px 4px;border-radius:12px;font-size:12px;
 }
 </style>
 </head>
@@ -208,13 +127,13 @@ button{font-family:inherit;cursor:pointer}
 <div class="card" onclick="start('کوچک',4,false)">
 <div class="icon">🎯</div>
 <h3>سودوکوی کوچک ۴×۴</h3>
-<p>یک جدول سریع و ساده</p>
+<p>جدول سریع و ساده</p>
 </div>
 
 <div class="card" onclick="start('رنگی',9,true)">
 <div class="icon">🎨</div>
 <h3>سودوکوی رنگی</h3>
-<p>جدول با خانه‌های رنگارنگ</p>
+<p>خانه‌های رنگارنگ</p>
 </div>
 
 <button class="primary" onclick="start('متوسط',9,false)">
@@ -269,14 +188,19 @@ function makeSolution(){
   shuffle([0,1,2]).map(x=>g*3+x)
  );
  let nums=shuffle([1,2,3,4,5,6,7,8,9]);
+
  return rows.map(r=>cols.map(c=>
   nums[(r*3+Math.floor(r/3)+c)%9]
  ));
 }
 
 function makeSmall(){
- let base=[[1,2,3,4],[3,4,1,2],[2,1,4,3],[4,3,2,1]];
- return base;
+ return [
+ [1,2,3,4],
+ [3,4,1,2],
+ [2,1,4,3],
+ [4,3,2,1]
+ ];
 }
 
 function start(level,s,color){
@@ -298,19 +222,22 @@ function newGame(){
  if(size===4){
   solution=makeSmall();
   puzzle=solution.map(r=>r.slice());
+
   shuffle(Array.from({length:16},(_,i)=>i))
-   .slice(7).forEach(i=>{
-    puzzle[Math.floor(i/4)][i%4]=0;
-   });
+  .slice(7).forEach(i=>{
+   puzzle[Math.floor(i/4)][i%4]=0;
+  });
  }else{
   solution=makeSolution();
   puzzle=solution.map(r=>r.slice());
+
   let level=document.getElementById('level').textContent;
   let count=level==='آسان'?35:level==='سخت'?52:43;
+
   shuffle(Array.from({length:81},(_,i)=>i))
-   .slice(0,count).forEach(i=>{
-    puzzle[Math.floor(i/9)][i%9]=0;
-   });
+  .slice(0,count).forEach(i=>{
+   puzzle[Math.floor(i/9)][i%9]=0;
+  });
  }
 
  initial=puzzle.map(r=>r.slice());
@@ -337,20 +264,22 @@ function render(){
 
   if(initial[r][c])cell.classList.add('fixed');
 
-  if(size===9){
-   if(c===2||c===5)
-    cell.style.borderLeft='3px solid #536ce9';
-   if(r===2||r===5)
-    cell.style.borderBottom='3px solid #536ce9';
-  }else{
-   if(c===1)cell.style.borderLeft='3px solid #536ce9';
-   if(r===1)cell.style.borderBottom='3px solid #536ce9';
+  // خطوط دقیق مربع‌ها:
+  // در ۹×۹ بعد از هر ۳ خانه
+  // در ۴×۴ بعد از هر ۲ خانه
+  if((c+1)% (size===9?3:2)===0 && c!==size-1){
+   cell.style.borderLeft='3px solid #536ce9';
   }
 
-  if(selected&&selected[0]===r&&selected[1]===c)
+  if((r+1)% (size===9?3:2)===0 && r!==size-1){
+   cell.style.borderBottom='3px solid #536ce9';
+  }
+
+  if(selected&&selected[0]===r&&selected[1]===c){
    cell.classList.add('selected');
-  else if(selected&&(selected[0]===r||selected[1]===c))
+  }else if(selected&&(selected[0]===r||selected[1]===c)){
    cell.classList.add('related');
+  }
 
   if(v&&active===v)cell.classList.add('same');
 
@@ -371,7 +300,9 @@ function render(){
  for(let n=1;n<=size;n++){
   let b=document.createElement('button');
   b.textContent=fa(n);
+
   if(active===n)b.classList.add('active');
+
   b.onclick=()=>put(n);
   nums.appendChild(b);
  }
@@ -379,6 +310,7 @@ function render(){
 
 function put(n){
  active=n;
+
  if(!selected){render();return;}
 
  let [r,c]=selected;
